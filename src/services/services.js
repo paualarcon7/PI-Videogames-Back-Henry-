@@ -31,9 +31,6 @@ const apiVideogames = async () => {
   try {
     const req1 = await axios.get(`${api}/games?key=${API_KEY}`);
     const req2 = await axios.get(req1.data.next);
-    const req3 = await axios.get(req2.data.next);
-    const req4 = await axios.get(req3.data.next);
-    const req5 = await axios.get(req4.data.next);
 
     const res1 = await req1.data.results.map(async (game) => {
       let subRequest = await axios.get(
@@ -71,63 +68,7 @@ const apiVideogames = async () => {
       };
     });
 
-    const res3 = await req3.data.results.map(async (game) => {
-      let subRequest = await axios.get(
-        `${api}/games/${game.id}?key=${API_KEY}`
-      );
-      return {
-        id: game.id,
-        name: game.name,
-        description: subRequest.data.description_raw,
-        released: game.released,
-        rating: game.rating,
-        platforms: game.platforms.map((p) => p.platform.name),
-        image: game.background_image,
-        genres: game.genres.map((genre) => {
-          return { name: genre.name };
-        }),
-      };
-    });
-
-    const res4 = await req4.data.results.map(async (game) => {
-      let subRequest = await axios.get(
-        `${api}/games/${game.id}?key=${API_KEY}`
-      );
-      return {
-        id: game.id,
-        name: game.name,
-        description: subRequest.data.description_raw,
-        released: game.released,
-        rating: game.rating,
-        platforms: game.platforms.map((p) => p.platform.name),
-        image: game.background_image,
-        genres: game.genres.map((genre) => {
-          return { name: genre.name };
-        }),
-      };
-    });
-
-    const res5 = await req5.data.results.map(async (game) => {
-      let subRequest = await axios.get(
-        `${api}/games/${game.id}?key=${API_KEY}`
-      );
-      return {
-        id: game.id,
-        name: game.name,
-        description: subRequest.data.description_raw,
-        released: game.released,
-        rating: game.rating,
-        platforms: game.platforms.map((p) => p.platform.name),
-        image: game.background_image,
-        genres: game.genres.map((genre) => {
-          return { name: genre.name };
-        }),
-      };
-    });
-
-    const finalResponse = await res1.concat(res2, res3, res4, res5);
-
-    //const finalData = await Promise.all(finalResponse).then((data) => data);
+    const finalResponse = await res1.concat(res2);
 
     return await Promise.all(finalResponse);
   } catch (err) {
